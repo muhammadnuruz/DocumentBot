@@ -63,7 +63,8 @@ Founder and CEO: @MUKHAMMADSODlQ""")
     tg_user = json.loads(
         requests.get(url=f"http://127.0.0.1:8000/api/telegram-users/chat_id/{msg.from_user.id}/").content)
     for i in admins:
-        await bot.send_message(chat_id=i, text=f"""
+        try:
+            await bot.send_message(chat_id=i, text=f"""
 ID: <a href='tg://user?id={msg.from_user.id}'>{msg.from_user.id}</a>
 Ism-Familiya: {tg_user['full_name']}
 Telefon-raqam: {tg_user['phone_number']}
@@ -71,6 +72,8 @@ Prezentatsiya turi: {msg.text}
 
 
 Shaxsiydan chatda aloqaga chiqing!""", parse_mode="HTML")
+        except Exception:
+            pass
 
 
 @dp.message_handler()
@@ -268,7 +271,8 @@ async def order_function_4(msg: types.Message, state: FSMContext):
         }
         requests.post(url=f"http://127.0.0.1:8000/api/analyses/create/", data=post_data)
         for i in admins:
-            await bot.send_message(chat_id=i, text=f"""
+            try:
+                await bot.send_message(chat_id=i, text=f"""
 ID: <a href='tg://user?id={msg.from_user.id}'>{msg.from_user.id}</a>
 Ism-Familiya: {tg_user['full_name']}
 Telefon-raqam: {tg_user['phone_number']}
@@ -278,6 +282,8 @@ Sahifalar soni: {data['page_number']}
 1 sahifa uchun narx: {data['price']}
 Umumiy narxi: {data['page_number'] * data['price']}
 """, reply_markup=await admin_yes_or_no_buttons(msg.from_user.id), parse_mode="HTML")
+            except Exception:
+                pass
         await state.finish()
     else:
         await state.finish()

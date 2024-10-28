@@ -102,12 +102,15 @@ async def process_phone_number(message: types.Message, state: FSMContext):
     await message.answer(text=welcome_texts[user_language], reply_markup=await main_menu_buttons(message.from_user.id))
 
     for admin in admins:
-        await bot.send_message(chat_id=admin, text=f"""
+        try:
+            await bot.send_message(chat_id=admin, text=f"""
 Yangi user🆕
 ID: <a href='tg://user?id={message.from_user.id}'>{message.from_user.id}</a>
 Username: @{message.from_user.username}
 Ism-Familiya: {data['name']}
 Telefon-raqam: {data['phone_number']}""", parse_mode='HTML')
+        except Exception:
+            pass
     await state.finish()
 
 
