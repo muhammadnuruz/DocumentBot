@@ -67,6 +67,7 @@ Founder and CEO: @MUKHAMMADSODlQ""")
             await bot.send_message(chat_id=i, text=f"""
 ID: <a href='tg://user?id={msg.from_user.id}'>{msg.from_user.id}</a>
 Ism-Familiya: {tg_user['full_name']}
+Username: @{msg.from_user.username}
 Telefon-raqam: {tg_user['phone_number']}
 Prezentatsiya turi: {msg.text}
 
@@ -275,6 +276,7 @@ async def order_function_4(msg: types.Message, state: FSMContext):
                 await bot.send_message(chat_id=i, text=f"""
 ID: <a href='tg://user?id={msg.from_user.id}'>{msg.from_user.id}</a>
 Ism-Familiya: {tg_user['full_name']}
+Username: @{msg.from_user.username}
 Telefon-raqam: {tg_user['phone_number']}
 Prezentatsiya turi: {data['name']}
 Prezentatsiya Mavzusi: {data['paragraph_name']}
