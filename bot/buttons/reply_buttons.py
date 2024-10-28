@@ -16,24 +16,24 @@ async def main_menu_buttons(chat_id: int):
     if tg_user['language'] == 'uz':
         for category in categories['results']:
             design.append([category['name']])
-        design.append([math])
-        design.append([science])
-        design.append([develop])
+        # design.append([math])
+        # design.append([science])
+        # design.append([develop])
         design.append([choice_language])
 
     elif tg_user['language'] == 'en':
         for category in categories['results']:
             design.append([category['en_name']])
-        design.append([math_en])
-        design.append([science_en])
-        design.append([develop_en])
+        # design.append([math_en])
+        # design.append([science_en])
+        # design.append([develop_en])
         design.append([choice_language_en])
     else:
         for category in categories['results']:
             design.append([category['ru_name']])
-        design.append([math_ru])
-        design.append([science_ru])
-        design.append([develop_ru])
+        # design.append([math_ru])
+        # design.append([science_ru])
+        # design.append([develop_ru])
         design.append([choice_language_ru])
     return ReplyKeyboardMarkup(keyboard=design, resize_keyboard=True)
 
