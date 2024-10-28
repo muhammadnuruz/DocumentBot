@@ -13,68 +13,68 @@ from bot.handlers import get_user_language
 from main import admins
 
 
-@dp.message_handler(
-    Text(equals=[math, math_ru, math_en, science, science_en, science_ru, develop, develop_ru, develop_en]))
-async def sciences_function(msg: types.Message):
-    language = await get_user_language(msg.from_user.id)
-    if language == 'uz':
-        await msg.answer(text="""
-Buyurtma tasdiqlandi. 
-
-Buyurtmangiz 50% to’lov qilganingizdan keyin boshlanadi va 24 soat
-ichida tayyorlab beriladi!
-
-Ko’proq ma’lumot uchun:
-@prezintatsiyauz_admin
-@preuzadmin
-
-Kanal: https://t.me/preuzb
-Natijalar: @pre_ishonch
-Asoschi va bosh direktor: @MUKHAMMADSODlQ""")
-    elif language == 'en':
-        await msg.answer("""
-Заказ подтвержден. 
-
-Ваш заказ начинается после оплаты 50% и 24 часов.
-приготовлено внутри!
-
-Для получения дополнительной информации:
-@prezintatsiyauz_admin
-@preuzadmin
-
-Канал: https://t.me/preuzb
-Результаты: @pre_ishonch
-Основатель и генеральный директор: @MUKHAMMADSODlQ
-""")
-    else:
-        await msg.answer("""
-Order confirmed. 
-
-Your order starts after you pay 50% and 24 hours
-prepared inside!
-
-For more information:
-@prezintatsiyauz_admin
-@preuzadmin
-
-Channel: https://t.me/preuzb
-Results: @pre_ishonch
-Founder and CEO: @MUKHAMMADSODlQ""")
-    tg_user = json.loads(
-        requests.get(url=f"http://127.0.0.1:8000/api/telegram-users/chat_id/{msg.from_user.id}/").content)
-    for i in admins:
-        try:
-            await bot.send_message(chat_id=i, text=f"""
-ID: <a href='tg://user?id={msg.from_user.id}'>{msg.from_user.id}</a>
-Ism-Familiya: {tg_user['full_name']}
-Username: @{msg.from_user.username}
-Telefon-raqam: {tg_user['phone_number']}
-Prezentatsiya turi: {msg.text}
-
-
-Shaxsiydan chatda aloqaga chiqing!""", parse_mode="HTML")
-        except Exception:
-            pass
+# @dp.message_handler(
+#     Text(equals=[math, math_ru, math_en, science, science_en, science_ru, develop, develop_ru, develop_en]))
+# async def sciences_function(msg: types.Message):
+#     language = await get_user_language(msg.from_user.id)
+#     if language == 'uz':
+#         await msg.answer(text="""
+# Buyurtma tasdiqlandi.
+#
+# Buyurtmangiz 50% to’lov qilganingizdan keyin boshlanadi va 24 soat
+# ichida tayyorlab beriladi!
+#
+# Ko’proq ma’lumot uchun:
+# @prezintatsiyauz_admin
+# @preuzadmin
+#
+# Kanal: https://t.me/preuzb
+# Natijalar: @pre_ishonch
+# Asoschi va bosh direktor: @MUKHAMMADSODlQ""")
+#     elif language == 'en':
+#         await msg.answer("""
+# Заказ подтвержден.
+#
+# Ваш заказ начинается после оплаты 50% и 24 часов.
+# приготовлено внутри!
+#
+# Для получения дополнительной информации:
+# @prezintatsiyauz_admin
+# @preuzadmin
+#
+# Канал: https://t.me/preuzb
+# Результаты: @pre_ishonch
+# Основатель и генеральный директор: @MUKHAMMADSODlQ
+# """)
+#     else:
+#         await msg.answer("""
+# Order confirmed.
+#
+# Your order starts after you pay 50% and 24 hours
+# prepared inside!
+#
+# For more information:
+# @prezintatsiyauz_admin
+# @preuzadmin
+#
+# Channel: https://t.me/preuzb
+# Results: @pre_ishonch
+# Founder and CEO: @MUKHAMMADSODlQ""")
+#     tg_user = json.loads(
+#         requests.get(url=f"http://127.0.0.1:8000/api/telegram-users/chat_id/{msg.from_user.id}/").content)
+#     for i in admins:
+#         try:
+#             await bot.send_message(chat_id=i, text=f"""
+# ID: <a href='tg://user?id={msg.from_user.id}'>{msg.from_user.id}</a>
+# Ism-Familiya: {tg_user['full_name']}
+# Username: @{msg.from_user.username}
+# Telefon-raqam: {tg_user['phone_number']}
+# Prezentatsiya turi: {msg.text}
+#
+#
+# Shaxsiydan chatda aloqaga chiqing!""", parse_mode="HTML")
+#         except Exception:
+#             pass
 
 
 @dp.message_handler()
