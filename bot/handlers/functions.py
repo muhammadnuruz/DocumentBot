@@ -77,7 +77,7 @@ Shaxsiydan chatda aloqaga chiqing!""", parse_mode="HTML")
             pass
 
 
-@dp.message_handler(Text(equals=["Taklifnoma", "Invitation letter", "Пригласительное письмо"]))
+@dp.message_handler(Text(equals=["Taklifnoma(QR-kodli)", "Приглашение (с QR-кодом)", "Invitation (with QR code)"]))
 async def invitation_request(msg: types.Message, state: FSMContext):
     language = await get_user_language(msg.from_user.id)
     if language == 'uz':
@@ -283,7 +283,7 @@ Telefon-raqam: {tg_user['phone_number']}
     await state.finish()
 
 
-@dp.message_handler(Text(equals=["YouTube", "Канал YouTube"]))
+@dp.message_handler(Text(equals=["YouTube uchun banner", "Баннер для YouTube", "Banner for YouTube"]))
 async def youtube_request(msg: types.Message, state: FSMContext):
     language = await get_user_language(msg.from_user.id)
     if language == 'uz':
@@ -343,7 +343,7 @@ Telefon-raqam: {tg_user['phone_number']}
 
 
 # Logo uchun ma'lumotlarni so'rash
-@dp.message_handler(Text(equals=["Logotip", "Логотип", "Logo"]))
+@dp.message_handler(Text(equals=["Logo tayyorlash", "Подготовка логотипа", "Logo preparation"]))
 async def logo_request(msg: types.Message, state: FSMContext):
     language = await get_user_language(msg.from_user.id)
     if language == 'uz':
@@ -402,7 +402,7 @@ async def collect_logo_info(msg: types.Message, state: FSMContext):
     await state.finish()
 
 
-@dp.message_handler(Text(equals=["Tarjima", "Перевод", "Translate"]))
+@dp.message_handler(Text(equals=["Tarjimonlik xizmati", "Услуги перевода", "Translation service"]))
 async def translation_request(msg: types.Message, state: FSMContext):
     language = await get_user_language(msg.from_user.id)
     if language == 'uz':
@@ -468,7 +468,9 @@ Telefon-raqam: {tg_user['phone_number']}
 
 
 # Matematik masalalarni so'rash
-@dp.message_handler(Text(equals=["Matematika", "Математика", "Math"]))
+@dp.message_handler(Text(
+    equals=["Matem va aniq fanlardan topshiriq yechib berish", "Решение заданий по математике и конкретным предметам",
+            "Solving assignments in mathematics and concrete subjects"]))
 async def math_request(msg: types.Message, state: FSMContext):
     language = await get_user_language(msg.from_user.id)
     if language == 'uz':
