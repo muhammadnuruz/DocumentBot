@@ -605,11 +605,11 @@ async def collect_ui_order_info(msg: types.Message, state: FSMContext):
     ui_order_info = msg.text.strip()
 
     if language == 'uz':
-        await msg.answer("UI buyurtma qabul qilindi.")
+        await msg.answer("Buyurtma qabul qilindi.\n\n@prezintatsiyauz_admin\n@preuzadmin")
     elif language == 'en':
-        await msg.answer("UI order received.")
+        await msg.answer("UI order received.\n\n@prezintatsiyauz_admin\n@preuzadmin")
     else:
-        await msg.answer("Заказ UI принят.")
+        await msg.answer("Заказ UI принят.\n\n@prezintatsiyauz_admin\n@preuzadmin")
 
     # Administratorlarga UI buyurtmasini yuborish
     for admin_id in admins:
