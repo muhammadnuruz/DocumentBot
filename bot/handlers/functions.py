@@ -13,68 +13,68 @@ from bot.handlers import get_user_language
 from main import admins
 
 
-@dp.message_handler(
-    Text(equals=[ui, ui_ru, ui_en, web, web_en, web_ru]))
-async def webs_function(msg: types.Message):
-    language = await get_user_language(msg.from_user.id)
-    if language == 'uz':
-        await msg.answer(text="""
-Buyurtma tasdiqlandi.
-
-Buyurtmangiz 50% to’lov qilganingizdan keyin boshlanadi va 24 soat
-ichida tayyorlab beriladi!
-
-Ko’proq ma’lumot uchun:
-@prezintatsiyauz_admin
-@preuzadmin
-
-Kanal: https://t.me/preuzb
-Natijalar: @pre_ishonch
-Asoschi va bosh direktor: @MUKHAMMADSODlQ""")
-    elif language == 'en':
-        await msg.answer("""
-Заказ подтвержден.
-
-Ваш заказ начинается после оплаты 50% и 24 часов.
-приготовлено внутри!
-
-Для получения дополнительной информации:
-@prezintatsiyauz_admin
-@preuzadmin
-
-Канал: https://t.me/preuzb
-Результаты: @pre_ishonch
-Основатель и генеральный директор: @MUKHAMMADSODlQ
-""")
-    else:
-        await msg.answer("""
-Order confirmed.
-
-Your order starts after you pay 50% and 24 hours
-prepared inside!
-
-For more information:
-@prezintatsiyauz_admin
-@preuzadmin
-
-Channel: https://t.me/preuzb
-Results: @pre_ishonch
-Founder and CEO: @MUKHAMMADSODlQ""")
-    tg_user = json.loads(
-        requests.get(url=f"http://127.0.0.1:8000/api/telegram-users/chat_id/{msg.from_user.id}/").content)
-    for i in admins:
-        try:
-            await bot.send_message(chat_id=i, text=f"""
-ID: <a href='tg://user?id={msg.from_user.id}'>{msg.from_user.id}</a>
-Ism-Familiya: {tg_user['full_name']}
-Username: @{msg.from_user.username}
-Telefon-raqam: {tg_user['phone_number']}
-Buyurtma turi: {msg.text}
-
-
-Shaxsiydan chatda aloqaga chiqing!""", parse_mode="HTML")
-        except Exception:
-            pass
+# @dp.message_handler(
+#     Text(equals=[ui, ui_ru, ui_en, web, web_en, web_ru]))
+# async def webs_function(msg: types.Message):
+#     language = await get_user_language(msg.from_user.id)
+#     if language == 'uz':
+#         await msg.answer(text="""
+# Buyurtma tasdiqlandi.
+#
+# Buyurtmangiz 50% to’lov qilganingizdan keyin boshlanadi va 24 soat
+# ichida tayyorlab beriladi!
+#
+# Ko’proq ma’lumot uchun:
+# @prezintatsiyauz_admin
+# @preuzadmin
+#
+# Kanal: https://t.me/preuzb
+# Natijalar: @pre_ishonch
+# Asoschi va bosh direktor: @MUKHAMMADSODlQ""")
+#     elif language == 'en':
+#         await msg.answer("""
+# Заказ подтвержден.
+#
+# Ваш заказ начинается после оплаты 50% и 24 часов.
+# приготовлено внутри!
+#
+# Для получения дополнительной информации:
+# @prezintatsiyauz_admin
+# @preuzadmin
+#
+# Канал: https://t.me/preuzb
+# Результаты: @pre_ishonch
+# Основатель и генеральный директор: @MUKHAMMADSODlQ
+# """)
+#     else:
+#         await msg.answer("""
+# Order confirmed.
+#
+# Your order starts after you pay 50% and 24 hours
+# prepared inside!
+#
+# For more information:
+# @prezintatsiyauz_admin
+# @preuzadmin
+#
+# Channel: https://t.me/preuzb
+# Results: @pre_ishonch
+# Founder and CEO: @MUKHAMMADSODlQ""")
+#     tg_user = json.loads(
+#         requests.get(url=f"http://127.0.0.1:8000/api/telegram-users/chat_id/{msg.from_user.id}/").content)
+#     for i in admins:
+#         try:
+#             await bot.send_message(chat_id=i, text=f"""
+# ID: <a href='tg://user?id={msg.from_user.id}'>{msg.from_user.id}</a>
+# Ism-Familiya: {tg_user['full_name']}
+# Username: @{msg.from_user.username}
+# Telefon-raqam: {tg_user['phone_number']}
+# Buyurtma turi: {msg.text}
+#
+#
+# Shaxsiydan chatda aloqaga chiqing!""", parse_mode="HTML")
+#         except Exception:
+#             pass
 
 
 @dp.message_handler(Text(equals=["Taklifnoma(QR-kodli)", "Приглашение (с QR-кодом)", "Invitation (with QR code)"]))
@@ -532,31 +532,166 @@ Telefon-raqam: {tg_user['phone_number']}
     await state.finish()
 
 
+@dp.message_handler(Text(equals=["Dasturlashga oid topshiriqni bajarib berish", "Выполняю задание по программированию",
+                                 "Completing a programming assignment"]))
+async def programming_task_request(msg: types.Message, state: FSMContext):
+    language = await get_user_language(msg.from_user.id)
+    if language == 'uz':
+        await msg.answer("Dasturlash topshiriqni yuboring:")
+    elif language == 'en':
+        await msg.answer("Please send the programming task:")
+    else:  # Russian
+        await msg.answer("Пожалуйста, отправьте задание по программированию:")
+
+    await state.set_state("waiting_for_task_info")
+
+
+@dp.message_handler(state="waiting_for_task_info")
+async def collect_task_info(msg: types.Message, state: FSMContext):
+    language = await get_user_language(msg.from_user.id)
+
+    # Foydalanuvchidan topshiriq ma'lumotlarini olish
+    task_info = msg.text
+
+    if language == 'uz':
+        await msg.answer("Dasturlash topshiriqi qabul qilindi.")
+    elif language == 'en':
+        await msg.answer("Programming task received.")
+    else:
+        await msg.answer("Задание по программированию получено.")
+
+    # Administratorlarga topshiriqni yuborish
+    for admin_id in admins:
+        try:
+            await bot.send_message(admin_id, f"""
+Yangi dasturlash topshiriqi:
+{task_info}
+Foydalanuvchi ID: <a href='tg://user?id={msg.from_user.id}'>{msg.from_user.id}</a>
+""", parse_mode="HTML")
+        except Exception as e:
+            print(f"Failed to send message to admin: {e}")
+
+    await state.finish()
+
+
+@dp.message_handler(Text(equals=[ui, ui_en, ui_ru, web, web_en, web_ru]))
+async def order_selection(msg: types.Message, state: FSMContext):
+    language = await get_user_language(msg.from_user.id)
+    if msg.text == ui or msg.text == ui_en or msg.text == ui_ru:
+        if language == 'uz':
+            await msg.answer("Iltimos, UI uchun buyurtma ma'lumotlarini yuboring:")
+        elif language == 'en':
+            await msg.answer("Please send the order details for the UI:")
+        else:
+            await msg.answer("Пожалуйста, отправьте детали заказа для UI:")
+
+        await state.set_state("waiting_for_ui_order_info")
+    else:
+        if language == 'uz':
+            await msg.answer("Iltimos, web sayt uchun buyurtma ma'lumotlarini yuboring:")
+        elif language == 'en':
+            await msg.answer("Please send the order details for the web site:")
+        else:
+            await msg.answer("Пожалуйста, отправьте детали заказа для веб-сайта:")
+
+        await state.set_state("waiting_for_web_order_info")
+
+
+@dp.message_handler(state="waiting_for_ui_order_info")
+async def collect_ui_order_info(msg: types.Message, state: FSMContext):
+    language = await get_user_language(msg.from_user.id)
+
+    # Foydalanuvchidan UI buyurtma ma'lumotlarini olish
+    ui_order_info = msg.text.strip()
+
+    if language == 'uz':
+        await msg.answer("UI buyurtma qabul qilindi.")
+    elif language == 'en':
+        await msg.answer("UI order received.")
+    else:
+        await msg.answer("Заказ UI принят.")
+
+    # Administratorlarga UI buyurtmasini yuborish
+    for admin_id in admins:
+        try:
+            await bot.send_message(admin_id, f"""
+Yangi UI buyurtma:
+{ui_order_info}
+Foydalanuvchi ID: <a href='tg://user?id={msg.from_user.id}'>{msg.from_user.id}</a>
+""", parse_mode="HTML")
+        except Exception as e:
+            print(f"Failed to send message to admin: {e}")
+
+    await state.finish()
+
+
+@dp.message_handler(state="waiting_for_web_order_info")
+async def collect_web_order_info(msg: types.Message, state: FSMContext):
+    language = await get_user_language(msg.from_user.id)
+
+    # Foydalanuvchidan web sayt buyurtma ma'lumotlarini olish
+    web_order_info = msg.text.strip()
+
+    if language == 'uz':
+        await msg.answer("Web sayt buyurtmasi qabul qilindi.")
+    elif language == 'en':
+        await msg.answer("Web order received.")
+    else:
+        await msg.answer("Заказ веб-сайта принят.")
+
+    # Administratorlarga web sayt buyurtmasini yuborish
+    for admin_id in admins:
+        try:
+            await bot.send_message(admin_id, f"""
+Yangi web sayt buyurtma:
+{web_order_info}
+Foydalanuvchi ID: <a href='tg://user?id={msg.from_user.id}'>{msg.from_user.id}</a>
+""", parse_mode="HTML")
+        except Exception as e:
+            print(f"Failed to send message to admin: {e}")
+
+    await state.finish()
+
+
 @dp.message_handler()
 async def order_function(msg: types.Message, state: FSMContext):
     categories = json.loads(requests.get(url="http://127.0.0.1:8000/api/documents/").content)['results']
+    txt = ''
+    txt_en = ''
+    txt_ru = ''
     for category in categories:
         if msg.text == category['name'] or msg.text == category['ru_name'] or msg.text == category['en_name']:
-            async with state.proxy() as data:
-                data['name'] = msg.text
-                data['price'] = category['price']
+            if category['name'] == "Mustaqil ish" or category['name'] == "Ilmiy maqola" or category[
+                'name'] == "Labaratoriya ishi va referat":
+                async with state.proxy() as data:
+                    data['name'] = msg.text
+                    data['price'] = category['price']
+                    data['test'] = 0
+            else:
+                async with state.proxy() as data:
+                    data['name'] = msg.text
+                    data['price'] = category['price']
+                    data['test'] = 1
+                    txt = "slayd"
+                    txt_en = 'slide'
+                    txt_ru = 'слайд'
             await state.set_state('page_number')
             language = await get_user_language(msg.from_user.id)
             if language == 'uz':
                 await msg.answer(f"""
-Siz {msg.text} ta’rif rejasinitanladingiz. Endi necha sahifali slayd kerakligini raqamlar orqali kiriting. (Masalan 10, 15, 18 va h.k.)
+Siz {msg.text} ta’rif rejasinitanladingiz. Endi necha sahifa {txt} kerakligini raqamlar orqali kiriting. (Masalan 10, 15, 18 va h.k.)
 
 {msg.text} 1 sahifa uchun {data['price']} uzs!""",
                                  reply_markup=await back_main_menu_button(msg.from_user.id))
             elif language == 'en':
                 await msg.answer(f"""
-You have selected the description plan {msg.text}. Now enter how many page slides you need by numbers. (For example 10, 15, 18, etc.)
+You have selected the description plan {msg.text}. Now enter how many page {txt_en} you need by numbers. (For example 10, 15, 18, etc.)
 
 {msg.text} {data['price']} uzs for 1 page!""",
                                  reply_markup=await back_main_menu_button(msg.from_user.id))
             else:
                 await msg.answer(f"""
-Вы выбрали план описания {msg.text}. Теперь введите числом необходимое количество слайдов страниц. (Например, 10, 15, 18 и т. д.)
+Вы выбрали план описания {msg.text}. Теперь введите числом необходимое количество {txt_ru} страниц. (Например, 10, 15, 18 и т. д.)
 
 {msg.text} {data['price']} узе за 1 страницу!""",
                                  reply_markup=await back_main_menu_button(msg.from_user.id))
