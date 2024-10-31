@@ -95,7 +95,7 @@ async def process_phone_number(message: types.Message, state: FSMContext):
     requests.post(url=f"http://127.0.0.1:8000/api/telegram-users/create/", data=post_data)
     user_language = data['language']
     welcome_texts = {
-        'uz': "Hush kelibsiz 😊",
+        'uz': "Xush kelibsiz 😊",
         'en': "Welcome 😊",
         'ru': "Добро пожаловать 😊"
     }

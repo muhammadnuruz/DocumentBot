@@ -7,74 +7,527 @@ from aiogram.types import ContentType
 
 from bot.buttons.inline_buttons import admin_yes_or_no_buttons
 from bot.buttons.reply_buttons import back_main_menu_button, yes_or_no_button, main_menu_buttons
-from bot.buttons.text import math, math_ru, math_en, science, science_en, science_ru, develop, develop_ru, develop_en
+from bot.buttons.text import ui, ui_ru, ui_en, web, web_en, web_ru
 from bot.dispatcher import dp, bot
 from bot.handlers import get_user_language
 from main import admins
 
 
-# @dp.message_handler(
-#     Text(equals=[math, math_ru, math_en, science, science_en, science_ru, develop, develop_ru, develop_en]))
-# async def sciences_function(msg: types.Message):
-#     language = await get_user_language(msg.from_user.id)
-#     if language == 'uz':
-#         await msg.answer(text="""
-# Buyurtma tasdiqlandi.
-#
-# Buyurtmangiz 50% to’lov qilganingizdan keyin boshlanadi va 24 soat
-# ichida tayyorlab beriladi!
-#
-# Ko’proq ma’lumot uchun:
-# @prezintatsiyauz_admin
-# @preuzadmin
-#
-# Kanal: https://t.me/preuzb
-# Natijalar: @pre_ishonch
-# Asoschi va bosh direktor: @MUKHAMMADSODlQ""")
-#     elif language == 'en':
-#         await msg.answer("""
-# Заказ подтвержден.
-#
-# Ваш заказ начинается после оплаты 50% и 24 часов.
-# приготовлено внутри!
-#
-# Для получения дополнительной информации:
-# @prezintatsiyauz_admin
-# @preuzadmin
-#
-# Канал: https://t.me/preuzb
-# Результаты: @pre_ishonch
-# Основатель и генеральный директор: @MUKHAMMADSODlQ
-# """)
-#     else:
-#         await msg.answer("""
-# Order confirmed.
-#
-# Your order starts after you pay 50% and 24 hours
-# prepared inside!
-#
-# For more information:
-# @prezintatsiyauz_admin
-# @preuzadmin
-#
-# Channel: https://t.me/preuzb
-# Results: @pre_ishonch
-# Founder and CEO: @MUKHAMMADSODlQ""")
-#     tg_user = json.loads(
-#         requests.get(url=f"http://127.0.0.1:8000/api/telegram-users/chat_id/{msg.from_user.id}/").content)
-#     for i in admins:
-#         try:
-#             await bot.send_message(chat_id=i, text=f"""
-# ID: <a href='tg://user?id={msg.from_user.id}'>{msg.from_user.id}</a>
-# Ism-Familiya: {tg_user['full_name']}
-# Username: @{msg.from_user.username}
-# Telefon-raqam: {tg_user['phone_number']}
-# Prezentatsiya turi: {msg.text}
-#
-#
-# Shaxsiydan chatda aloqaga chiqing!""", parse_mode="HTML")
-#         except Exception:
-#             pass
+@dp.message_handler(
+    Text(equals=[ui, ui_ru, ui_en, web, web_en, web_ru]))
+async def webs_function(msg: types.Message):
+    language = await get_user_language(msg.from_user.id)
+    if language == 'uz':
+        await msg.answer(text="""
+Buyurtma tasdiqlandi.
+
+Buyurtmangiz 50% to’lov qilganingizdan keyin boshlanadi va 24 soat
+ichida tayyorlab beriladi!
+
+Ko’proq ma’lumot uchun:
+@prezintatsiyauz_admin
+@preuzadmin
+
+Kanal: https://t.me/preuzb
+Natijalar: @pre_ishonch
+Asoschi va bosh direktor: @MUKHAMMADSODlQ""")
+    elif language == 'en':
+        await msg.answer("""
+Заказ подтвержден.
+
+Ваш заказ начинается после оплаты 50% и 24 часов.
+приготовлено внутри!
+
+Для получения дополнительной информации:
+@prezintatsiyauz_admin
+@preuzadmin
+
+Канал: https://t.me/preuzb
+Результаты: @pre_ishonch
+Основатель и генеральный директор: @MUKHAMMADSODlQ
+""")
+    else:
+        await msg.answer("""
+Order confirmed.
+
+Your order starts after you pay 50% and 24 hours
+prepared inside!
+
+For more information:
+@prezintatsiyauz_admin
+@preuzadmin
+
+Channel: https://t.me/preuzb
+Results: @pre_ishonch
+Founder and CEO: @MUKHAMMADSODlQ""")
+    tg_user = json.loads(
+        requests.get(url=f"http://127.0.0.1:8000/api/telegram-users/chat_id/{msg.from_user.id}/").content)
+    for i in admins:
+        try:
+            await bot.send_message(chat_id=i, text=f"""
+ID: <a href='tg://user?id={msg.from_user.id}'>{msg.from_user.id}</a>
+Ism-Familiya: {tg_user['full_name']}
+Username: @{msg.from_user.username}
+Telefon-raqam: {tg_user['phone_number']}
+Buyurtma turi: {msg.text}
+
+
+Shaxsiydan chatda aloqaga chiqing!""", parse_mode="HTML")
+        except Exception:
+            pass
+
+
+@dp.message_handler(Text(equals=["Taklifnoma", "Invitation letter", "Пригласительное письмо"]))
+async def invitation_request(msg: types.Message, state: FSMContext):
+    language = await get_user_language(msg.from_user.id)
+    if language == 'uz':
+        await msg.answer("""
+Taklifnoma uchun kerakli ma'lumotlarni ketma-ketlikda yuboring:
+Kelin-kuyov ismi, familiyasi.
+To'y sanasi.
+Manzil.
+To'yxona nomi.
+""")
+    elif language == 'ru':
+        await msg.answer("""
+Для приглашения отправьте данные в следующем порядке:
+Имя и фамилия жениха и невесты.
+Дата свадьбы.
+Адрес.
+Название зала.
+""")
+    else:  # English
+        await msg.answer("""
+For the invitation, send the necessary information in the following order:
+Bride and groom's name and surname.
+Wedding date.
+Address.
+Hall name.
+""")
+    await state.set_state("waiting_for_invitation_info")
+
+
+@dp.message_handler(state="waiting_for_invitation_info")
+async def collect_invitation_info(msg: types.Message, state: FSMContext):
+    language = await get_user_language(msg.from_user.id)
+    if language == 'uz':
+        await msg.answer(text="""
+Buyurtma tasdiqlandi.
+
+Buyurtmangiz 50% to’lov qilganingizdan keyin boshlanadi va 24 soat
+ichida tayyorlab beriladi!
+
+Ko’proq ma’lumot uchun:
+@prezintatsiyauz_admin
+@preuzadmin
+
+Kanal: https://t.me/preuzb
+Natijalar: @pre_ishonch
+Asoschi va bosh direktor: @MUKHAMMADSODlQ""")
+    elif language == 'en':
+        await msg.answer("""
+Заказ подтвержден.
+
+Ваш заказ начинается после оплаты 50% и 24 часов.
+приготовлено внутри!
+
+Для получения дополнительной информации:
+@prezintatsiyauz_admin
+@preuzadmin
+
+Канал: https://t.me/preuzb
+Результаты: @pre_ishonch
+Основатель и генеральный директор: @MUKHAMMADSODlQ
+""")
+    else:
+        await msg.answer("""
+Order confirmed.
+
+Your order starts after you pay 50% and 24 hours
+prepared inside!
+
+For more information:
+@prezintatsiyauz_admin
+@preuzadmin
+
+Channel: https://t.me/preuzb
+Results: @pre_ishonch
+Founder and CEO: @MUKHAMMADSODlQ""")
+    tg_user = json.loads(
+        requests.get(url=f"http://127.0.0.1:8000/api/telegram-users/chat_id/{msg.from_user.id}/").content)
+    for admin_id in admins:
+        text = {
+            'uz': f"Taklifnoma ma'lumotlari:\n{msg.text}",
+            'ru': f"Данные для приглашения:\n{msg.text}",
+            'en': f"Invitation details:\n{msg.text}"
+        }.get(language, msg.text)
+
+        try:
+            await bot.send_message(chat_id=admin_id, text=f"""
+{text}
+Foydalanuvchi ID: <a href='tg://user?id={msg.from_user.id}'>{msg.from_user.id}</a>
+Ism: {tg_user['full_name']}
+Username: @{msg.from_user.username}
+Telefon-raqam: {tg_user['phone_number']}
+""", parse_mode="HTML")
+        except Exception:
+            pass
+    await state.finish()
+
+
+# Rezyume uchun so'rov va adminlarga yuborish
+@dp.message_handler(Text(equals=["Rezyume", "Резюме", "Resume"]))
+async def resume_request(msg: types.Message, state: FSMContext):
+    language = await get_user_language(msg.from_user.id)
+    if language == 'uz':
+        await msg.answer("""
+Rezyume uchun, quyidagi ma'lumotlarni yuboring:
+Ism-familiya, otasini ismi,
+Tug'ilgan yili,
+Tug'ilgan joyi,
+O'qish joylari (boshlagan va tugatgan yillari),
+Ish faoliyati,
+Partiyadorligi,
+Email va telefon raqami.
+""")
+    elif language == 'ru':
+        await msg.answer("""
+Для резюме отправьте следующие данные:
+Имя и фамилия, отчество,
+Дата рождения,
+Место рождения,
+Учебные заведения (годы начала и окончания),
+Трудовая деятельность,
+Членство в партии,
+Электронная почта и телефонный номер.
+""")
+    else:  # English
+        await msg.answer("""
+For the resume, send the following information:
+Name and surname, father's name,
+Date of birth,
+Place of birth,
+Educational institutions (start and end years),
+Work experience,
+Party membership,
+Email and phone number.
+""")
+    await state.set_state("waiting_for_resume_info")
+
+
+@dp.message_handler(state="waiting_for_resume_info")
+async def collect_resume_info(msg: types.Message, state: FSMContext):
+    language = await get_user_language(msg.from_user.id)
+    if language == 'uz':
+        await msg.answer(text="""
+Buyurtma tasdiqlandi.
+
+Buyurtmangiz 50% to’lov qilganingizdan keyin boshlanadi va 24 soat
+ichida tayyorlab beriladi!
+
+Ko’proq ma’lumot uchun:
+@prezintatsiyauz_admin
+@preuzadmin
+
+Kanal: https://t.me/preuzb
+Natijalar: @pre_ishonch
+Asoschi va bosh direktor: @MUKHAMMADSODlQ""")
+    elif language == 'en':
+        await msg.answer("""
+Заказ подтвержден.
+
+Ваш заказ начинается после оплаты 50% и 24 часов.
+приготовлено внутри!
+
+Для получения дополнительной информации:
+@prezintatsiyauz_admin
+@preuzadmin
+
+Канал: https://t.me/preuzb
+Результаты: @pre_ishonch
+Основатель и генеральный директор: @MUKHAMMADSODlQ
+    """)
+    else:
+        await msg.answer("""
+Order confirmed.
+
+Your order starts after you pay 50% and 24 hours
+prepared inside!
+
+For more information:
+@prezintatsiyauz_admin
+@preuzadmin
+
+Channel: https://t.me/preuzb
+Results: @pre_ishonch
+Founder and CEO: @MUKHAMMADSODlQ""")
+    tg_user = json.loads(
+        requests.get(url=f"http://127.0.0.1:8000/api/telegram-users/chat_id/{msg.from_user.id}/").content)
+    for admin_id in admins:
+        text = {
+            'uz': f"Rezyume ma'lumotlari:\n{msg.text}",
+            'ru': f"Данные для резюме:\n{msg.text}",
+            'en': f"Resume details:\n{msg.text}"
+        }.get(language, msg.text)
+
+        try:
+            await bot.send_message(chat_id=admin_id, text=f"""
+{text}
+Foydalanuvchi ID: <a href='tg://user?id={msg.from_user.id}'>{msg.from_user.id}</a>
+Ism: {tg_user['full_name']}
+Username: @{msg.from_user.username}
+Telefon-raqam: {tg_user['phone_number']}
+""", parse_mode="HTML")
+        except Exception:
+            pass
+    await state.finish()
+
+
+@dp.message_handler(Text(equals=["YouTube", "Канал YouTube"]))
+async def youtube_request(msg: types.Message, state: FSMContext):
+    language = await get_user_language(msg.from_user.id)
+    if language == 'uz':
+        await msg.answer("""
+YouTube kanali uchun kerakli ma'lumotlarni yuboring:
+1. Kanal nomi.
+2. Kanalni nima haqida yuritilishini.
+""")
+    elif language == 'ru':
+        await msg.answer("""
+Отправьте необходимые данные для канала YouTube:
+1. Название канала.
+2. О чем будет канал.
+""")
+    else:  # English
+        await msg.answer("""
+Please send the necessary information for your YouTube channel:
+1. Channel name.
+2. What the channel will be about.
+""")
+    await state.set_state("waiting_for_youtube_info")
+
+
+@dp.message_handler(state="waiting_for_youtube_info")
+async def collect_youtube_info(msg: types.Message, state: FSMContext):
+    language = await get_user_language(msg.from_user.id)
+
+    channel_info = msg.text
+
+    if language == 'uz':
+        await msg.answer(text="YouTube uchun ma'lumotlar qabul qilindi.")
+    elif language == 'ru':
+        await msg.answer(text="Данные для YouTube приняты.")
+    else:
+        await msg.answer(text="YouTube information received.")
+
+    tg_user = json.loads(
+        requests.get(url=f"http://127.0.0.1:8000/api/telegram-users/chat_id/{msg.from_user.id}/").content)
+    for admin_id in admins:
+        text = {
+            'uz': f"YouTube kanal ma'lumotlari:\n{channel_info}",
+            'ru': f"Данные канала YouTube:\n{channel_info}",
+            'en': f"YouTube channel details:\n{channel_info}"
+        }.get(language, channel_info)
+
+        try:
+            await bot.send_message(chat_id=admin_id, text=f"""
+{text}
+Foydalanuvchi ID: <a href='tg://user?id={msg.from_user.id}'>{msg.from_user.id}</a>
+Ism: {tg_user['full_name']}
+Username: @{msg.from_user.username}
+Telefon-raqam: {tg_user['phone_number']}
+""", parse_mode="HTML")
+        except Exception:
+            pass
+    await state.finish()
+
+
+# Logo uchun ma'lumotlarni so'rash
+@dp.message_handler(Text(equals=["Logotip", "Логотип", "Logo"]))
+async def logo_request(msg: types.Message, state: FSMContext):
+    language = await get_user_language(msg.from_user.id)
+    if language == 'uz':
+        await msg.answer("""
+Logo uchun kerakli ma'lumotlarni yuboring:
+1. Kompaniya nomi.
+2. Nima ish bilan shug'ullanadi.
+""")
+    elif language == 'ru':
+        await msg.answer("""
+Отправьте необходимые данные для логотипа:
+1. Название компании.
+2. Чем она занимается.
+""")
+    else:  # English
+        await msg.answer("""
+Please send the necessary information for the logo:
+1. Company name.
+2. What it does.
+""")
+    await state.set_state("waiting_for_logo_info")
+
+
+@dp.message_handler(state="waiting_for_logo_info")
+async def collect_logo_info(msg: types.Message, state: FSMContext):
+    language = await get_user_language(msg.from_user.id)
+
+    logo_info = msg.text
+
+    if language == 'uz':
+        await msg.answer(text="Logo uchun ma'lumotlar qabul qilindi.")
+    elif language == 'ru':
+        await msg.answer(text="Данные для логотипа приняты.")
+    else:
+        await msg.answer(text="Logo information received.")
+
+    tg_user = json.loads(
+        requests.get(url=f"http://127.0.0.1:8000/api/telegram-users/chat_id/{msg.from_user.id}/").content)
+    for admin_id in admins:
+        text = {
+            'uz': f"Logo ma'lumotlari:\n{logo_info}",
+            'ru': f"Данные логотипа:\n{logo_info}",
+            'en': f"Logo details:\n{logo_info}"
+        }.get(language, logo_info)
+
+        try:
+            await bot.send_message(chat_id=admin_id, text=f"""
+    {text}
+    Foydalanuvchi ID: <a href='tg://user?id={msg.from_user.id}'>{msg.from_user.id}</a>
+    Ism: {tg_user['full_name']}
+    Username: @{msg.from_user.username}
+    Telefon-raqam: {tg_user['phone_number']}
+    """, parse_mode="HTML")
+        except Exception as e:
+            print(f"Error sending message to admin: {e}")  # Log the error for debugging
+    await state.finish()
+
+
+@dp.message_handler(Text(equals=["Tarjima", "Перевод", "Translate"]))
+async def translation_request(msg: types.Message, state: FSMContext):
+    language = await get_user_language(msg.from_user.id)
+    if language == 'uz':
+        await msg.answer("""
+Tarjima qilish uchun quyidagi ma'lumotlarni yuboring:
+1. Tarjima qilinishi kerak bo'lgan matn.
+2. Skrinshot (rasm) yuborish mumkin.
+""")
+    elif language == 'ru':
+        await msg.answer("""
+Отправьте информацию для перевода:
+1. Текст, который нужно перевести.
+2. Можно отправить скриншот (изображение).
+""")
+    else:  # English
+        await msg.answer("""
+Please send the information to be translated:
+1. The text that needs to be translated.
+2. A screenshot (image) can be sent.
+""")
+    await state.set_state("waiting_for_translation_info")
+
+
+@dp.message_handler(state="waiting_for_translation_info", content_types=types.ContentTypes.ANY)
+async def collect_translation_info(msg: types.Message, state: FSMContext):
+    language = await get_user_language(msg.from_user.id)
+
+    if msg.content_type == "text":
+        translation_info = msg.text
+    elif msg.content_type == "photo":
+        translation_info = "Skrinshot qabul qilindi."  # Skrinshot qabul qilindi
+    else:
+        await msg.answer("Iltimos, faqat matn yoki skrinshot yuboring.")
+        return
+
+    if language == 'uz':
+        await msg.answer(text="Tarjima uchun ma'lumotlar qabul qilindi.")
+    elif language == 'ru':
+        await msg.answer(text="Данные для перевода приняты.")
+    else:
+        await msg.answer(text="Translation information received.")
+
+    tg_user = json.loads(
+        requests.get(url=f"http://127.0.0.1:8000/api/telegram-users/chat_id/{msg.from_user.id}/").content)
+    for admin_id in admins:
+        text = {
+            'uz': f"Tarjima ma'lumotlari:\n{translation_info}",
+            'ru': f"Данные для перевода:\n{translation_info}",
+            'en': f"Translation details:\n{translation_info}"
+        }.get(language, translation_info)
+
+        try:
+            await bot.send_message(chat_id=admin_id, text=f"""
+{text}
+Foydalanuvchi ID: <a href='tg://user?id={msg.from_user.id}'>{msg.from_user.id}</a>
+Ism: {tg_user['full_name']}
+Username: @{msg.from_user.username}
+Telefon-raqam: {tg_user['phone_number']}
+""", parse_mode="HTML")
+        except Exception:
+            pass
+    await state.finish()
+
+
+# Matematik masalalarni so'rash
+@dp.message_handler(Text(equals=["Matematika", "Математика", "Math"]))
+async def math_request(msg: types.Message, state: FSMContext):
+    language = await get_user_language(msg.from_user.id)
+    if language == 'uz':
+        await msg.answer("""
+Matematik masala uchun quyidagi ma'lumotlarni yuboring:
+1. Masalaning matni yoki rasm.
+""")
+    elif language == 'ru':
+        await msg.answer("""
+Отправьте информацию для математической задачи:
+1. Текст или изображение задачи.
+""")
+    else:  # English
+        await msg.answer("""
+Please send the information for the math problem:
+1. The text or image of the problem.
+""")
+    await state.set_state("waiting_for_math_info")
+
+
+@dp.message_handler(state="waiting_for_math_info", content_types=types.ContentTypes.ANY)
+async def collect_math_info(msg: types.Message, state: FSMContext):
+    language = await get_user_language(msg.from_user.id)
+
+    if msg.content_type == "text":
+        math_info = msg.text
+    elif msg.content_type == "photo":
+        math_info = "Rasm qabul qilindi."  # Rasm qabul qilindi
+    else:
+        await msg.answer("Iltimos, faqat matn yoki rasm yuboring.")
+        return
+
+    if language == 'uz':
+        await msg.answer(text="Matematik masala uchun ma'lumotlar qabul qilindi.")
+    elif language == 'ru':
+        await msg.answer(text="Данные для математической задачи приняты.")
+    else:
+        await msg.answer(text="Math problem information received.")
+
+    tg_user = json.loads(
+        requests.get(url=f"http://127.0.0.1:8000/api/telegram-users/chat_id/{msg.from_user.id}/").content)
+    for admin_id in admins:
+        text = {
+            'uz': f"Matematik masala ma'lumotlari:\n{math_info}",
+            'ru': f"Данные математической задачи:\n{math_info}",
+            'en': f"Math problem details:\n{math_info}"
+        }.get(language, math_info)
+
+        try:
+            await bot.send_message(chat_id=admin_id, text=f"""
+{text}
+Foydalanuvchi ID: <a href='tg://user?id={msg.from_user.id}'>{msg.from_user.id}</a>
+Ism: {tg_user['full_name']}
+Username: @{msg.from_user.username}
+Telefon-raqam: {tg_user['phone_number']}
+""", parse_mode="HTML")
+        except Exception:
+            pass
+    await state.finish()
 
 
 @dp.message_handler()
