@@ -5,8 +5,7 @@ import requests
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 
 from bot.buttons.text import back_main_menu, choice_language, choice_language_ru, choice_language_en, back_main_menu_ru, \
-    back_main_menu_en, none_advert, forward_advert, adverts, math, science, develop, math_en, science_en, develop_en, \
-    develop_ru, science_ru, math_ru
+    back_main_menu_en, none_advert, forward_advert, adverts
 
 
 async def main_menu_buttons(chat_id: int):
