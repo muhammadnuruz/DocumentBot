@@ -561,12 +561,17 @@ async def collect_task_info(msg: types.Message, state: FSMContext):
         await msg.answer("Задание по программированию получено.")
 
     # Administratorlarga topshiriqni yuborish
+    tg_user = json.loads(
+        requests.get(url=f"http://127.0.0.1:8000/api/telegram-users/chat_id/{msg.from_user.id}/").content)
     for admin_id in admins:
         try:
             await bot.send_message(admin_id, f"""
 Yangi dasturlash topshiriqi:
 {task_info}
 Foydalanuvchi ID: <a href='tg://user?id={msg.from_user.id}'>{msg.from_user.id}</a>
+Ism: {tg_user['full_name']}
+Username: @{msg.from_user.username}
+Telefon-raqam: {tg_user['phone_number']}
 """, parse_mode="HTML")
         except Exception as e:
             print(f"Failed to send message to admin: {e}")
@@ -612,12 +617,17 @@ async def collect_ui_order_info(msg: types.Message, state: FSMContext):
         await msg.answer("Заказ UI принят.\n\n@prezintatsiyauz_admin\n@preuzadmin")
 
     # Administratorlarga UI buyurtmasini yuborish
+    tg_user = json.loads(
+        requests.get(url=f"http://127.0.0.1:8000/api/telegram-users/chat_id/{msg.from_user.id}/").content)
     for admin_id in admins:
         try:
             await bot.send_message(admin_id, f"""
 Yangi UI buyurtma:
 {ui_order_info}
 Foydalanuvchi ID: <a href='tg://user?id={msg.from_user.id}'>{msg.from_user.id}</a>
+Ism: {tg_user['full_name']}
+Username: @{msg.from_user.username}
+Telefon-raqam: {tg_user['phone_number']}
 """, parse_mode="HTML")
         except Exception as e:
             print(f"Failed to send message to admin: {e}")
@@ -640,12 +650,17 @@ async def collect_web_order_info(msg: types.Message, state: FSMContext):
         await msg.answer("Заказ веб-сайта принят.")
 
     # Administratorlarga web sayt buyurtmasini yuborish
+    tg_user = json.loads(
+        requests.get(url=f"http://127.0.0.1:8000/api/telegram-users/chat_id/{msg.from_user.id}/").content)
     for admin_id in admins:
         try:
             await bot.send_message(admin_id, f"""
 Yangi web sayt buyurtma:
 {web_order_info}
 Foydalanuvchi ID: <a href='tg://user?id={msg.from_user.id}'>{msg.from_user.id}</a>
+Ism: {tg_user['full_name']}
+Username: @{msg.from_user.username}
+Telefon-raqam: {tg_user['phone_number']}
 """, parse_mode="HTML")
         except Exception as e:
             print(f"Failed to send message to admin: {e}")
